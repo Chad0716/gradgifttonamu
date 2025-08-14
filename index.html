@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Namu & Peanut</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#f7f6ff;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --accent:#a78bfa;
+  --pill:#e9e7ff;
+  --shadow:0 10px 30px rgba(31,41,55,.12);
+  --theme-hue: 250; /* Default purple hue */
+}
+.dark{
+  --bg:#0f1220;
+  --card:#151a2c;
+  --text:#e5e7eb;
+  --muted:#9aa3b2;
+  --pill:#242a45;
+  --shadow:0 12px 34px rgba(0,0,0,.45);
+}
+
+/* Calculate accent color based on hue */
+:root {
+  --accent: hsl(var(--theme-hue), 85%, 75%);
+  --accent-light: hsl(var(--theme-hue), 85%, 85%);
+  --accent-dark: hsl(var(--theme-hue), 85%, 65%);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Apple Color Emoji","Segoe UI Emoji";
+  background:radial-gradient(1200px 800px at 10% -10%, #ffe4ec 0%, rgba(255,255,255,0) 40%), radial-gradient(1000px 700px at 110% 10%, #e9f7ff 0%, rgba(255,255,255,0) 42%), var(--bg);
+  color:var(--text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Auth */
+#loginContainer{
+  min-height:100dvh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:var(--card);
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  padding:28px;
+  position: relative;
+}
+.login-title{font-weight:700;font-size:26px;margin:0 0 4px}
+.login-sub{color:var(--muted);margin:0 0 22px}
+.input{
+  width:100%;
+  border:1px solid rgba(99,102,241,.18);
+  background:linear-gradient(180deg,rgba(167,139,250,.06),transparent);
+  color:var(--text);
+  padding:13px 14px;
+  border-radius:14px;
+  outline:none;
+}
+.input:not(:first-child){margin-top:12px}
+.btn{
+  width:100%;
+  border:none;
+  background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color:white;
+  padding:12px 16px;
+  margin-top:16px;
+  border-radius:14px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(96,165,250,.35);
+}
+.alt{
+  width:100%;
+  border:1px solid rgba(167,139,250,.35);
+  background:transparent;
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:12px;
+  cursor:pointer;
+}
+.row{display:flex;gap:10px;margin-top:12px}
+
+/* App shell */
+#appContainer{display:none}
+.nav{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(255,255,255,.6);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(167,139,250,.2);
+  padding: 0 16px;
+}
+.dark .nav{background:rgba(21,26,44,.6)}
+.nav-inner{
+  max-width:1100px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 0;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+.logo{
+  height:36px;
+  width:36px;
+  border-radius:10px;
+  background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+  box-shadow:var(--shadow);
+}
+.title{
+  font-weight:800;
+  letter-spacing:.3px;
+  white-space:nowrap;
+}
+
+/* Improved Navbar Tabs */
+.tabs-container {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin-left: 12px;
+}
+
+.tabs-container::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  padding-bottom: 8px;
+}
+
+.tab{
+  appearance:none;
+  border:none;
+  background:var(--pill);
+  color:var(--text);
+  padding:8px 12px;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:13px;
+  flex-shrink:0;
+  white-space:nowrap;
+}
+
+.tab.active{
+  background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color:#fff;
+}
+
+.mode{
+  border:1px solid rgba(167,139,250,.5);
+  background:transparent;
+  border-radius:999px;
+  padding:7px 10px;
+  cursor:pointer;
+  flex-shrink:0;
+  margin-left:8px;
+}
+
+/* Container */
+.container{
+  max-width:1100px;
+  margin:16px auto;
+  padding:16px;
+}
+
+/* Home feed IG grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+@media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid{grid-template-columns:repeat(2,1fr)}}
+
+.tile{
+  position:relative;
+  border-radius:16px;
+  overflow:hidden;
+  background:var(--card);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  isolation:isolate;
+  transition: transform 0.3s ease;
+}
+.tile:hover {
+  transform: translateY(-5px);
+}
+.tile img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  aspect-ratio:1/1;
+}
+.tile .overlay{
+  position:absolute;
+  inset:auto 0 0 0;
+  background:linear-gradient(to top,rgba(0,0,0,.55),transparent);
+  color:#fff;
+  padding:8px 10px;
+  font-size:12px;
+  font-weight:600;
+}
+
+/* IG post style */
+.post{
+  background:var(--card);
+  border-radius:20px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  margin:14px 0;
+}
+.post-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 14px;
+}
+.pfp{
+  height:38px;
+  width:38px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#dbeafe;
+}
+.username{font-weight:700}
+.badge{font-size:12px;color:var(--muted)}
+.post-media{
+  width:100%;
+  display:block;
+}
+.post-media.img{height:auto}
+.post-media.letter{padding:18px}
+.letter-card{
+  background:linear-gradient(180deg,rgba(167,139,250,.08),rgba(96,165,250,.08));
+  border:1px solid rgba(167,139,250,.22);
+  border-radius:14px;
+  padding:16px;
+  color:var(--text);
+}
+.caption{padding:12px 14px;line-height:1.55}
+.actions{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:10px 14px;
+}
+.heart,.comment-btn{
+  cursor:pointer;
+  font-size:20px;
+}
+.likes{
+  padding:0 14px 14px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* Profiles */
+.profile{
+  display:grid;
+  grid-template-columns:120px 1fr;
+  gap:16px;
+  align-items:center;
+  margin:6px 0 20px;
+}
+.profile .pfp-big{
+  height:110px;
+  width:110px;
+  border-radius:30px;
+  object-fit:cover;
+  background:#ffd6e0;
+  box-shadow:var(--shadow);
+}
+.bio{color:var(--muted)}
+.highlights{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.pill{
+  background:var(--pill);
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--text);
+}
+
+/* Roblox memories */
+.memory-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+@media (max-width:900px){.memory-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:600px){.memory-grid{grid-template-columns:repeat(2,1fr)}}
+.memory{
+  background:var(--card);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.memory img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  display:block;
+}
+.memory .cap{
+  padding:8px 10px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* Music posts */
+.music{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--card);
+  border-radius:14px;
+  border:1px solid rgba(167,139,250,.2);
+  padding:12px;
+  box-shadow:var(--shadow);
+}
+.music img{
+  height:56px;
+  width:56px;
+  border-radius:10px;
+  object-fit:cover;
+  background:#d1f5ff;
+}
+.music .info{flex:1}
+.music .title{font-weight:700;font-size:14px}
+.music .sub{font-size:12px;color:var(--muted)}
+.music audio{width:140px}
+
+/* Psychology */
+.psych-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-top: 30px;
+}
+@media (max-width:800px){.psych-wrap{grid-template-columns:1fr}}
+.card{
+  background:var(--card);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+.card h3{margin:0 0 6px}
+.small{
+  font-size:13px;
+  color:var(--muted);
+  margin:0 0 10px;
+}
+.box{
+  background:linear-gradient(180deg,rgba(167,139,250,.08),rgba(96,165,250,.08));
+  border:1px solid rgba(167,139,250,.22);
+  border-radius:12px;
+  padding:12px;
+  min-height:96px;
+}
+.gen-btn{
+  display:inline-block;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  padding:10px 12px;
+  cursor:pointer;
+  background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color:#fff;
+  font-weight:700;
+}
+
+/* Modal */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  z-index:60;
+}
+.modal-inner{
+  max-width:880px;
+  width:100%;
+  background:var(--card);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 14px;
+  border-bottom:1px solid rgba(167,139,250,.15);
+}
+.close{
+  background:transparent;
+  border:none;
+  font-size:22px;
+  cursor:pointer;
+  color:var(--text);
+}
+.modal-body{
+  max-height:75dvh;
+  overflow:auto;
+}
+.modal-body img{
+  width:100%;
+  display:block;
+}
+.modal-cap{
+  padding:14px;
+  line-height:1.6;
+}
+.hide{display:none}
+.center{display:grid;place-items:center}
+
+/* New Graduation Storybook Styles */
+#storybook {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.gif-section {
+  text-align: center;
+  margin: 30px 0;
+  cursor: pointer;
+}
+
+.group {
+  display: flex;
+  margin: 30px 0;
+  gap: 20px;
+}
+
+.group[data-order="msg-left-pic-right"] {
+  flex-direction: row;
+}
+
+.group[data-order="pic-left-msg-right"] {
+  flex-direction: row-reverse;
+}
+
+.col {
+  flex: 1;
+}
+
+.message {
+  background: linear-gradient(180deg, rgba(167,139,250,.08), rgba(96,165,250,.08));
+  border: 1px solid rgba(167,139,250,.22);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.media img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+#final-message {
+  text-align: center;
+  margin: 40px 0;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(167,139,250,.1), rgba(96,165,250,.1));
+  border-radius: 18px;
+}
+
+@media (max-width: 768px) {
+  .group {
+    flex-direction: column !important;
+  }
+  
+  .col {
+    width: 100%;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-15px); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .story-cover h2 {
+    font-size: 24px;
+  }
+  
+  .chibi {
+    width: 60px;
+    height: 80px;
+  }
+  
+  .tabs {
+    gap: 4px;
+  }
+  
+  .tab {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
+
+/* PROFILE TABS STYLES */
+.profile-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.profile-tab {
+  background: var(--pill);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.profile-tab.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  color: white;
+}
+
+.profile-content.hide {
+  display: none;
+}
+
+/* FIXED: 5TH MONTHSARY STYLES */
+.monthsary-gift {
+  padding: 20px;
+}
+
+.gift-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.gift-header h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gift-header p {
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.reason-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 900px) {
+  .reason-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .reason-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reason-card {
+  background: var(--card);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.reason-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.reason-image {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.reason-content {
+  padding: 15px;
+}
+
+.reason-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.reason-text {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.love-letter {
+  background: linear-gradient(135deg, rgba(167,139,250,0.1), rgba(96,165,250,0.1));
+  border-radius: 16px;
+  padding: 25px;
+  margin-top: 20px;
+  border: 1px solid rgba(167,139,250,0.2);
+}
+
+.love-letter h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--accent);
+}
+
+.love-letter p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.signature {
+  text-align: right;
+  font-style: italic;
+  margin-top: 20px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Theme customization */
+.color-picker {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+  cursor: pointer;
+  margin-left: 8px;
+  border: 2px solid var(--card);
+  box-shadow: var(--shadow);
+}
+
+.color-picker input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Color presets */
+.color-presets {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.color-preset {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid var(--card);
+  box-shadow: var(--shadow);
+}
+
+/* Customization panel */
+.customize-panel {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow);
+  z-index: 70;
+  display: none;
+}
+
+.customize-title {
+  font-size: 16px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+<div id="loginContainer">
+  <div class="login-card">
+    <h1 class="login-title">Welcome, Lovebirds 💖</h1>
+    <p class="login-sub">Enter your shared login to open your private space.</p>
+    <input id="username" class="input" placeholder="Username" />
+    <input id="password" class="input" placeholder="Password" type="password" />
+    <button id="loginButton" class="btn">Log In</button>
+    <div class="row">
+      <button id="modeLogin" class="alt">Toggle Light/Dark</button>
+      <div class="color-picker">
+        <input type="color" id="themeColor" title="Choose theme color">
+      </div>
+    </div>
+    <div class="color-presets">
+      <div class="color-preset" style="background:#a78bfa;" data-hue="250"></div>
+      <div class="color-preset" style="background:#ff6b6b;" data-hue="0"></div>
+      <div class="color-preset" style="background:#4dabf7;" data-hue="210"></div>
+      <div class="color-preset" style="background:#51cf66;" data-hue="130"></div>
+      <div class="color-preset" style="background:#f783ac;" data-hue="340"></div>
+    </div>
+  </div>
+</div>
+
+<div id="appContainer" style="display:none">
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="brand">
+        <div class="logo"></div>
+        <div class="title">Namu & Peanut</div>
+      </div>
+      <div class="tabs-container">
+        <div class="tabs">
+          <button class="tab active" data-target="home">Home</button>
+          <button class="tab" data-target="roblox">Roblox Memories</button>
+          <button class="tab" data-target="grad">Graduation Gift</button>
+          <button class="tab" data-target="music">Pics with Music</button>
+          <button class="tab" data-target="birthdays">Birthday Gifts</button>
+          <button class="tab" data-target="monthsary">Monthsary Letters</button>
+          <button class="tab" data-target="profiles">N&P</button>
+        </div>
+      </div>
+      <button id="mode" class="mode">🌗</button>
+      <div class="color-picker">
+        <input type="color" id="themeColorApp" title="Choose theme color">
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <section id="home">
+      <div class="grid" id="homeGrid">
+        <!-- Namu's Birthday Tile -->
+        <div class="tile" data-type="img" data-img="birthday.jpg" data-caption="Happy Birthday, babe! Im so glad because I finally broke the curse ako ang first boyfriend mo na umabot sa birthday mo! And of course, charot-charot lang yung sinabi kong wala akong gift sayo, HAHA. Ako pa ba? Syempre meron! Sobrang excited na akong ibigay to sayo. So, here's my special gift for you — open the link for a surprise! I really hope you love it. Pinagpuyatan ko yan kagabi, 3 AM na ako natulog! I poured my heart, mind, and soul into making it (pero di ako nanunumbat, lol). Happiest birthday, babe — I love, love, love, loveee you. —Peanut">
+          <img src="birthday.jpg" alt="">
+          <div class="overlay">Peanut → Birthday gift for Namu</div>
+        </div>
+        
+        <!-- Peanut's Birthday Tile -->
+        <div class="tile" data-type="img" data-img="peanut birthday.jpg" data-caption="happy birthday, Peanut<br><br>I hope you enjoy your day. This day is about you and you only get to celebrate it once a year. I always wish you happiness and peace of mind. I am always rooting for you. You have a great start ahead of you! I hope that this new age will welcome you with new opportunities. Enjoy your day and treat yourself.<br><br>sorry, ito lang nakayanan">
+          <img src="peanut birthday.jpg" alt="">
+          <div class="overlay">Namu → Birthday gift for Peanut</div>
+        </div>
+
+        <!-- Graduation Tile -->
+        <div class="tile" data-type="img" data-img="peanut and namu grad.jpg" data-caption="Congratulations, my love. 🤍 Sobrang proud ako sa’yo — sa lahat ng puyat, pagod, at sakripisyo na nilagay mo para makarating sa moment na ‘to. You’ve worked so hard and now you’re shining brighter than ever. This is just the beginning of even greater things, and I’ll always be here, cheering you on and loving you every step of the way. I love you, my Namu, forever and always. ❤️ – Peanut">
+          <img src="peanut and namu grad.jpg" alt="">
+          <div class="overlay">Peanut → Graduation gift for Namu</div>
+        </div>
+
+        <!-- 3rd Monthsary Peanut -->
+        <div class="tile" data-type="letter" data-caption="To the love of my life Andrei..." data-letter-title="Peanut → 3rd Monthsary Letter" data-letter-body="To the love of my life Andrei
+
+Still can't believe we're already celebrating our 3rd monthsary.
+
+Sana hindi mo nakalimutan na 3rd motmot natin today, hehe. I love you, Andrei, alam mo 'yan.
+
+A man pakinggan, pero ikaw na ata ang buhay ko, ang pahinga ko sa mundong magulo. Takot akong mawala ka.
+
+Pasensya na kung minsan ako pa ang nagiging dahilan ng tampuhan natin dahil sa pagiging moody ko. Pero kahit ganun, pinili mo pa ring manatili and I'm beyond grateful and thankful for that. Thank you for staying, especially during the times na ako pa ang mahirap intindihin. Pero sabi ko nga, babawi ako.
+
+Susuportahan kita sa lahat ng laban mo sa review mo, sa pangarap mo, o kahit saan pa man. Lagi lang akong nandito sa tabi mo.
+
+Mamahalin kita ng higit pa sa mga nakaraan. Ipaparamdam ko sa'yo na worth it mag-stay sa akin.
+
+Sana, huwag kang magsawa. Sana patuloy mo pa rin akong intindihin kasi ganun din ako sa'yo.
+Mahal na mahal kita, Andrei. 🤍
+
+xoxo Charles">
+          <img src="namu and peanut.jpg" alt="">
+          <div class="overlay">Peanut → 3rd Monthsary</div>
+        </div>
+
+        <!-- 3rd Monthsary Namu -->
+        <div class="tile" data-type="letter" data-caption="Happy 3rd Monthsary babeee..." data-letter-title="Namu → 3rd Monthsary Letter" data-letter-body="HAPPY 3RD MONTHSARY BABEEE, PEANUT, BABY BEAR, MAHALLL! ik this past few weeks have been a whirlwind of emotions for us but im happy that we're still together today. thank u for always being by my side even when sometimes, ik you're compromising other things. hindi man halata but i rlly do appreciate that.
+
+sorry kung minsan nagkukulang ako or minsan i tend to not be so responsive dahil nagiging busy with adulting stuff - but im trying my best. and i also know that in the following weeks, i'd focus more on my review since the books have already arrived, which means that i have no more time to waste. hopefully, u will still be able to understand me and hoping na di ka magsawa. :(( the boards r rlly critical and i have to pass bc tito ko lang nagprovide ng pangreview center saakin and i dont want to disappoint him - i have to make his investments sakin worth it
+
+but aside all that, ofc, i will do my best to give time saatin, and ofc, to do the things that we love doing. the future is certainly uncertain, but i believe that when we're together, we can surpass those obstacles. i love u and appreciate u more than u know. u're the most genuine person i've known. and i love u for being u. 
+
+and love, do not get pressured. someday, you'll be where you want to be. take things slowly, and i know that with your potential, you can soar high and reach your dreams. just know that when things get heavy, im here. you're not alone, you have me.
+
+happy 3rd monthsary mahal, i love u palagi. kakayanin! (at happy pride na rin HWSHHAHAHA MGA BADING!!) 🤍 
+
+namu, ure baby panda">
+          <img src="namu and peanut 2.jpg" alt="">
+          <div class="overlay">Namu → 3rd Monthsary</div>
+        </div>
+
+        <!-- 4th Monthsary Peanut -->
+        <div class="tile" data-type="letter" data-caption="Happy 4th Mot-Mot..." data-letter-title="Peanut → 4th Monthsary Letter" data-letter-body="Happy 4th Mot-Mot, my love, my baby, my everything.
+
+Ang bilis talaga ng panahon. Another month has passed, and here we are, celebrating our 4th month together, another beautiful chapter in our love story. And I pray this won't be the last.
+
+Honestly, hindi ko talaga in expect na aabot tayo dito. Pero siguro nga, miracles do happen at ikaw 'yung biggest miracle na dumating sa magulo kong mundo. Ang galing mo kasi, napapasaya mo ako sa mga simpleng bagay na ginagawa mo, mga bagay na hindi ko rin naman inasahan. Hindi ko rin inakala na mamahalin kita nang ganito ka lalim.
+
+Pasensya ka na kung puro letters at websites lagi regalo ko sa'yo. Nakalimutan ko pa nga yung name ng website nato kaya kinailangan kong mag backread. 😛 Pero alam mo sobrang saya balikan ng mga panahon na nag uumpisa pa lang tayo. Naiiyak man ako minsan habang binabalikan yon puro saya pa rin ang nararamdaman ko.
+
+Naalala ko kung gaano ako kakulit sayo kapag nami-miss kita. Tadtad ng GIFs ang chats ko, o kaya sobrang lambing ko minsan gusto ko pa makipag ano--- alam mo na 'yon. Hahahaha 😄
+
+Di ko din alam kung naaalala mo pa, pero nag call tayo noon ng halos 9 hours. Di ko na nga rin tanda kung ano pinag usapan natin, pero sobrang saya lang.
+
+Nakaka miss din yung pagkatapos natin mag call sa Discord lilipat tayo sa Messenger para mag sleep call. Mga simpleng bagay na sobrang sarap balikan mga memories na nagpapangiti pa rin sakin hanggang ngayon.
+
+Aaminin ko, there were times na nadadoubt ko yung sarili ko. Pero ikaw yung naging lakas ko.
+
+Gustuhin ko man ulitin lahat ng ginagawa natin noon, minsan hindi na puwede kasi busy ka at busy na rin ako. Tama ka, we're getting older, we have priorities and kailangan natin harapin ang reality. Nakakapanghinayang lang kasi parang hindi na natin nagagawa kahit yung simpleng tawag lang.
+
+Hindi rin naging madali para satin ang mga nag daan na araw at buwan kasi dumaan tayo sa away at misunderstandings. Pero kahit ganun, hindi tayo bumitaw. Kaya sana wag ka ring susuko sakin gaya ng pangako ko sayo na hihintayin kita at iintindihin ko ikaw at busy daysmo at hinding hindi kita susukuan.
+
+Mahal na mahal kita, Drei higit pa sa inaakala mo. Ganito lang ako pero lahat ng nararamdaman ko para sayo ay totoo. 
+
+I'm so, so proud of you, mahal congratulations sa pagiging Magna Cum Laude. Sobrang ganda ng achievement na yan, at patunay na malayo na ang narating mo. And I know you're only just getting started.
+
+Bago ko tapusin tong letter, may naisip lang ako bigla, Kung dumating man yung panahon na hindi ikaw ang makakasama ko habang buha, ang hiling ko lang sana matagpuan mo pa rin yung magpapasaya sayo. Pero syempre ako na yon Ayaw na kitang pakawalan eh.
+
+I love you, I miss you, mahal na mahal na mahal na mahal kita. Mwa mwa. 💗">
+          <img src="namu and peanut 3.jpg" alt="">
+          <div class="overlay">Peanut → 4th Monthsary</div>
+        </div>
+
+        <!-- 4th Monthsary Namu -->
+        <div class="tile" data-type="letter" data-caption="Happy 4th Monthsary Babe!" data-letter-title="Namu → 4th Monthsary Letter" data-letter-body="Happy 4th Monthsary Babe!
+
+I know this past few months have been a challenge, especially for you. And I really appreciate the fact that you're still choosing to stay and love me. 
+
+Life really gets serious and hits you in the face sometimes, and that makes me somewhat assertive and emotional at the same time — which reflects my attitude sometimes whenever we talk. And I'm really sorry and I have no excuse to those things I've done.
+
+But just know that deeply in my heart, I love you and I will always choose to stay because this relationship is valuable to me more than anything else.
+
+I hope soon, we reach our dreams on life and hopefully, we get to meet 🥹👋🏻 I really wanna see you haha. I love you so much babe, and please, take care of yourself for me. Mwaaa, love you baby bear 🐻🤍
+
+HAPPY 4TH MONTHSARY SATINNNNNNN 😘♥️
+
+Sincerely,
+Drei, your baby panda 🐼">
+          <img src="namu and peanut 4.jpg" alt="">
+          <div class="overlay">Namu → 4th Monthsary</div>
+        </div>
+        
+        <!-- 5th Monthsary Namu -->
+        <div class="tile" data-type="letter" data-caption="Happy 5th Monthsary Babe!" data-letter-title="Namu → 5th Monthsary Letter" data-letter-body="Hello Babe, Peanut, Baby, Baby Bear!
+
+HAPPY 5TH MONTHSARY SATINNNN. OMG, I can't believe na umabot tayo ng 5 months. PARANG KELAN LANG ULIT T^T I hope you feel and know how much I love you. The past month definitely tested us, we were at our lowest, but still, we're here together. Proud na proud ako sa'tin, na 'di natin piniling sumuko sa isa't-isa.
+
+Thank you for everything you've done for me, I really appreciate your efforts. Mahal na mahal kita sobra pa sa inaakala mo. Tomorrow, ga-graduate na ang oat na ito which means na same na tayong alumniiii! CHEERS TO THATTT. I'm so happy to be sharing this important milestone with you, and I'm very happy that you're in it.
+
+Stay strong sa atin babe, more memories are underway for us. I love you so much and hoping you're always in good health - physically and mentally. Also hoping for our relationship to stay strong and committed. HAPPY MONTHSARY BABEEE YAYYY 😍 🤍">
+          <img src="namu and peanut 5.jpg" alt="">
+          <div class="overlay">Namu → 5th Monthsary</div>
+        </div>
+        
+        <!-- 5th Monthsary Gift -->
+        <div class="tile" data-type="monthsary5">
+          <img src="namu and peanut 6.jpg" alt="">
+          <div class="overlay">Peanut → 5th Monthsary Gift</div>
+        </div>
+      </div>
+      
+      <!-- Psychology Section at bottom of home page -->
+      <div class="psych-wrap">
+        <div class="card">
+          <h3>Psychology of Our Love</h3>
+          <p class="small">Scientific reasons why our relationship works.</p>
+          <div class="box">
+            <div id="compliment-text">Click the button to discover psychological insights about our relationship!</div>
+            <div id="bias-explanation" class="small" style="margin-top:8px"></div>
+          </div>
+          <button class="gen-btn" id="complimentBtn">Show Insight</button>
+        </div>
+        <div class="card">
+          <h3>Relationship Affirmations</h3>
+          <p class="small">Daily reminders for our bond.</p>
+          <div class="box">
+            <div id="affirmation-text">Click below for your relationship affirmation!</div>
+            <div id="psychology-principle" class="small" style="margin-top:8px"></div>
+          </div>
+          <button class="gen-btn" id="affirmationBtn">Give Affirmation</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="roblox" class="hide">
+      <div class="memory-grid">
+        <div class="tile" data-type="img" data-img="bath day.png" data-caption="Our bath time together in Roblox">
+          <img src="bath day.png" alt="Bath Together">
+          <div class="overlay">Bath Together</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="kissing.png" data-caption="Our sweet kiss moment in Roblox">
+          <img src="kissing.png" alt="Kiss of love">
+          <div class="overlay">Kiss of love</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="matching.png" data-caption="Our matching bear and panda outfits">
+          <img src="matching.png" alt="Bear X Panda">
+          <div class="overlay">Bear X Panda</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="everest.png" data-caption="Exploring Mount Everest together">
+          <img src="everest.png" alt="Cutie duo">
+          <div class="overlay">Cutie duo</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="love.png" data-caption="Our favorite picture together">
+          <img src="love.png" alt="Favorite picture">
+          <div class="overlay">Favorite picture of us</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="date.png" data-caption="Our first Roblox date">
+          <img src="date.png" alt="First date">
+          <div class="overlay">It's a date!</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="date part 2.png" data-caption="Another wonderful date in Roblox">
+          <img src="date part 2.png" alt="Another date">
+          <div class="overlay">Another Date for us</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="match.png" data-caption="Our perfectly matching outfits">
+          <img src="match.png" alt="Matching fits">
+          <div class="overlay">Matching fits</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="aurora.png" data-caption="Romantic moment under the Aurora">
+          <img src="aurora.png" alt="Under Aurora">
+          <div class="overlay">Under the Aurora</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="ratw.png" data-caption="Winners of RATW competition!">
+          <img src="ratw.png" alt="RATW Winners">
+          <div class="overlay">RATW Winners!</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="maze (1).png" data-caption="Our first date at the Maze">
+          <img src="maze (1).png" alt="First date at Maze">
+          <div class="overlay">First ever date at the Maze</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="dti.png" data-caption="Dressed to impress for each other">
+          <img src="dti.png" alt="Dress to Impress">
+          <div class="overlay">Dress to Impress</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="pageant.png" data-caption="Competing in pageants together">
+          <img src="pageant.png" alt="Pageants">
+          <div class="overlay">Us at joining pageants</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="swimming (2).png" data-caption="Fun swimming time together">
+          <img src="swimming (2).png" alt="Swimming">
+          <div class="overlay">Swimming time!</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="cafe.png" data-caption="Date at the Hello Kitty Cafe">
+          <img src="cafe.png" alt="Hello Kitty Cafe">
+          <div class="overlay">Hello Kitty Cafe!</div>
+        </div>
+        
+        <div class="tile" data-type="img" data-img="us being naughty.png" data-caption="Our playful naughty moments">
+          <img src="us being naughty.png" alt="Being naughty">
+          <div class="overlay">This is us being naughty</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="grad" class="hide">
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="happy peanut.jpg" alt="">
+          <div>
+            <div class="username">Peanut</div>
+            <div class="badge">Graduation Gift for Namu • Aug 14, 2025</div>
+          </div>
+        </div>
+        
+        <main id="storybook">
+          <!-- START GIF (clickable) -->
+          <section id="start-gif" class="gif-section" tabindex="0">
+            <div id="gifStartVisual" role="button" aria-pressed="false">
+              <div class="chibi-container">
+                <div class="chibi peanut-dance"></div>
+                <div class="chibi namu-dance"></div>
+                <img src="research.jpg" alt="Graduation cap" class="cap">
+              </div>
+            </div>
+          </section>
+
+          <!-- CONTENT: alternating rows (6 groups) -->
+          <section id="content">
+            <!-- Group 1: Message 1 (left) | Pic 1 (right) -->
+            <article class="group" id="group-1" data-order="msg-left-pic-right">
+              <div class="message col" id="message-1" role="article" aria-label="Message 1">
+                <p id="msg1">My baby namu, these past few months ay nakita ko lahat ng versions mo,  yung mga gabing puyat ka, yung tahimik na moments na halos lamunin ka ng pagod at kaba, at yung paulit-ulit mong pagpili na lumaban at magpatuloy. Mula sa walang katapusang pages ng research hanggang sa nakaka-stress na araw ng board review, never kang bumitaw sa pangarap mo.</p>  
+              </div>
+              <div class="media col" id="pic-1" role="img" aria-label="Picture 1">
+                <img src="image 1 grad.jpg" alt="Graduation moment" id="img1">
+              </div>
+            </article>
+
+            <!-- Group 2: Pic 2 (left) | Message 2 (right) -->
+            <article class="group" id="group-2" data-order="pic-left-msg-right">
+              <div class="media col" id="pic-2">
+                <img src="image 2 grad.jpg" alt="Celebration photo" id="img2">
+              </div>
+              <div class="message col" id="message-2">
+                <p id="msg2">You kept going… and now, look at you, my love. Today, all eyes are on you and everything you've worked so hard for. My heart is overflowing with pride and joy.</p>
+              </div>
+            </article>
+
+            <!-- Group 3: Message 3 (left) | Pic 3 (right) -->
+            <article class="group" id="group-3" data-order="msg-left-pic-right">
+              <div class="message col" id="message-3">
+                <p id="msg3">Watching you turn your dreams into reality feels like witnessing the most beautiful story ever, and I feel so lucky na ako yung kasama mo sa journey na ‘to.</p>
+              </div>
+              <div class="media col" id="pic-3">
+                <img src="image 3 grad.jpg" alt="Achievement moment" id="img3">
+              </div>
+            </article>
+
+            <!-- Group 4: Pic 4 (left) | Message 4 (right) -->
+            <article class="group" id="group-4" data-order="pic-left-msg-right">
+              <div class="media col" id="pic-4">
+                <img src="image grad 5.jpg" alt="Together moment" id="img4">
+              </div>
+              <div class="message col" id="message-4">
+                <p id="msg4">Kahit saan ka dalhin ng buhay, andito lang ako — holding your hand, cheering you on, and reminding you to breathe, to take it one step at a time, and to celebrate every win, no matter how small. Ang layo na ng narating mo, pero alam kong mas malayo pa ang mararating mo, kasi the world isn’t ready for someone as amazing as you.</p>
+              </div>
+            </article>
+
+            <!-- Group 5: Message 5 (left) | Pic 5 (right) -->
+            <article class="group" id="group-5" data-order="msg-left-pic-right">
+              <div class="message col" id="message-5">
+                <p id="msg5">This is just the beginning of greater things ahead, and I can't wait to see you conquer more. I love you, my namu — forever and always. ❤️</p>
+              </div>
+              <div class="media col" id="pic-5">
+                <img src="image 4 grad.jpg" alt="Future together" id="img5">
+              </div>
+            </article>
+          </section>
+
+          <!-- END GIF (clickable) -->
+          <section id="end-gif" class="gif-section">
+            <div id="gifEndVisual" role="button" aria-pressed="false">
+              <img src="graduate.jpg" alt="">
+    </div>
+          </section>
+
+          <!-- FINAL MESSAGE -->
+          <section id="final-message" role="article" aria-label="Final message">
+            <div id="finalText">
+              <p>Congratulations, my graduate! I'm so proud of everything you've accomplished and excited for all that's yet to come. Malayo pa, pero malayo ka na. This is your moment - savor every second of it!</p>
+            </div>
+          </section>
+        </main>
+      </div>
+    </section>
+
+    <section id="music" class="hide">
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="https://via.placeholder.com/80/99ccff/000?text=N" alt="">
+          <div><div class="username">Peanut</div><div class="badge">Pics with Music</div></div>
+        </div>
+        <div class="caption">Playlists we play for each other.</div>
+        <div class="post-media letter">
+          <div class="music">
+            <img src="in love.jpg" alt="">
+            <div class="info">
+              <div class="title">A song that reminds you of us</div>
+              <div class="sub">Lauv – I Like Me Better</div>
+            </div>
+            <audio controls>
+              <source src="Lauv - I Like Me Better [Official Audio].mp3">
+            </audio>
+          </div>
+          <br>
+        
+          <div class="music">
+            <img src="sad.jpg" alt="">
+            <div class="info">
+              <div class="title">Here's a song to cheer you up</div>
+              <div class="sub">Kacey Musgraves – Rainbow</div>
+            </div>
+            <audio controls>
+              <source src="Rainbow - Gatton (Lyrics)  When the sky is finally open.mp3">
+            </audio>
+          </div>
+          <br>
+        
+          <div class="music">
+            <img src="namu and peanut 2.jpg" alt="">
+            <div class="info">
+              <div class="title">When you miss me play this song</div>
+              <div class="sub">Arthur Miguel – I Will Be Here (Cover)</div>
+            </div>
+            <audio controls>
+              <source src="I Will Be Here (Steven Curtis Chapman) cover by Arthur miguel.mp3">
+            </audio>
+          </div>
+          <br>
+        
+          <div class="music">
+            <img src="sad peanut.jpg" alt="">
+            <div class="info">
+              <div class="title">When you're overthinking, don't forget to breathe and play this song</div>
+              <div class="sub">Hunter Hayes – Invisible</div>
+            </div>
+            <audio controls>
+              <source src="Invisible - Hunter Hayes (Lyrics).mp3">
+            </audio>
+          </div>
+          <br>
+        
+          <div class="music">
+            <img src="image grad 5.jpg" alt="">
+            <div class="info">
+              <div class="title">When you're in doubt of everything play this song</div>
+              <div class="sub">Andra Day – Rise Up</div>
+            </div>
+            <audio controls>
+              <source src="Andra Day - Rise Up  Lyrics.mp3">
+            </audio>
+          </div>
+          <br>
+        
+          <div class="music">
+            <img src="image 4 grad.jpg" alt="">
+            <div class="info">
+              <div class="title">One of my favorite song</div>
+              <div class="sub">Jason Mraz & Colbie Caillat – Lucky</div>
+            </div>
+            <audio controls>
+              <source src="Lucky - Jason Mraz Colbie Caillat [Vietsub  Lyrics].mp3">
+            </audio>
+          </div>
+          <br>
+        
+          <div class="music">
+            <img src="namu and peanut 6.jpg" alt="">
+            <div class="info">
+              <div class="title">Because you are perfect for me</div>
+              <div class="sub">Ed Sheeran – Perfect</div>
+            </div>
+            <audio controls>
+              <source src="Ed Sheeran - Perfect.mp3">
+            </audio>
+          </div>
+        </div>
+        
+        <div class="actions"><span class="heart">❤️</span><span class="comment-btn">💬</span></div>
+        <div class="likes">0 likes</div>
+      </div>
+    </section>
+
+    <section id="birthdays" class="hide">
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="proud.jpg" alt="">
+          <div><div class="username">Namu</div><div class="badge">For Peanut • Jul 16, 2025</div></div>
+        </div>
+        <img class="post-media img" src="https://via.placeholder.com/1200x800/d1f5ff/000?text=Birthday+Peanut" alt="">
+
+         <img class="post-media img" src="peanut birthday.jpg" alt="">
+        <div class="caption">
+          happy birthday, Peanut<br><br>
+          I hope you enjoy your day. This day is about you and you only get to celebrate it once a year.
+          I always wish you happiness and peace of mind. I am always rooting for you. You have a great start ahead of you!
+          I hope that this new age will welcome you with new opportunities. Enjoy your day and treat yourself.
+          <br><br>sorry, ito lang nakayanan
+        </div>
+        <div class="actions"><span class="heart">❤️</span><span class="comment-btn">💬</span></div>
+        <div class="likes">0 likes</div>
+      </div>
+
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="proud peanut.jpg" alt="">
+          <div><div class="username">Peanut</div><div class="badge">For Namu • Apr 22, 2025</div></div>
+        </div>
+        <img class="post-media img" src="birthday.jpg" alt="">
+        <div class="caption">
+          Happy Birthday, babe! Im so glad because I finally broke the curse ako ang first boyfriend mo na umabot sa birthday mo! And of course, charot-charot lang yung sinabi kong wala akong gift sayo, HAHA. Ako pa ba? Syempre meron! Sobrang excited na akong ibigay to sayo.
+          <br><br>So, here's my special gift for you open the link for a surprise! I really hope you love it. Pinagpuyatan ko yan kagabi, 3 AM na ako natulog! I poured my heart, mind, and soul into making it (pero di ako nanunumbat, lol).
+          <br><br>Happiest birthday, babe I love, love, love, loveee you
+        </div>
+        <div class="actions"><span class="heart">❤️</span><span class="comment-btn">💬</span></div>
+        <div class="likes">0 likes</div>
+      </div>
+    </section>
+
+    <section id="monthsary" class="hide">
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="in love peanut.jpg" alt="">
+          <div><div class="username">Peanut</div><div class="badge">3rd Monthsary • Jun 13, 2025</div></div>
+        </div>
+        <div class="post-media letter">
+          <div class="letter-card">
+            <strong>Peanut → Namu</strong><br><br>
+            To the love of my life Andrei<br><br>
+            Still can't believe we're already celebrating our 3rd monthsary.<br><br>
+            Sana hindi mo nakalimutan na 3rd motmot natin today, hehe. I love you, Andrei, alam mo 'yan.<br><br>
+            A man pakinggan, pero ikaw na ata ang buhay ko, ang pahinga ko sa mundong magulo. Takot akong mawala ka.<br><br>
+            Pasensya na kung minsan ako pa ang nagiging dahilan ng tampuhan natin dahil sa pagiging moody ko. Pero kahit ganun, pinili mo pa ring manatili and I'm beyond grateful and thankful for that. Thank you for staying, especially during the times na ako pa ang mahirap intindihin. Pero sabi ko nga, babawi ako.<br><br>
+            Susuportahan kita sa lahat ng laban mo sa review mo, sa pangarap mo, o kahit saan pa man. Lagi lang akong nandito sa tabi mo.<br><br>
+            Mamahalin kita ng higit pa sa mga nakaraan. Ipaparamdam ko sa'yo na worth it mag-stay sa akin.<br><br>
+            Sana, huwag kang magsawa. Sana patuloy mo pa rin akong intindihin kasi ganun din ako sa'yo. Mahal na mahal kita, Andrei. 🤍<br><br>
+            xoxo Charles
+          </div>
+        </div>
+      </div>
+
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="in love.jpg" alt="">
+          <div><div class="username">Namu</div><div class="badge">3rd Monthsary • Jun 13, 2025</div></div>
+        </div>
+        <div class="post-media letter">
+          <div class="letter-card">
+            <strong>Namu → Peanut</strong><br><br>
+            HAPPY 3RD MONTHSARY BABEEE, PEANUT, BABY BEAR, MAHALLL! ik this past few weeks have been a whirlwind of emotions for us but im happy that we're still together today. thank u for always being by my side even when sometimes, ik you're compromising other things. hindi man halata but i rlly do appreciate that.<br><br>
+            sorry kung minsan nagkukulang ako or minsan i tend to not be so responsive dahil nagiging busy with adulting stuff - but im trying my best. and i also know that in the following weeks, i'd focus more on my review since the books have already arrived, which means that i have no more time to waste. hopefully, u will still be able to understand me and hoping na di ka magsawa. :(( the boards r rlly critical and i have to pass bc tito ko lang nagprovide ng pangreview center saakin and i dont want to disappoint him - i have to make his investments sakin worth it<br><br>
+            but aside all that, ofc, i will do my best to give time saatin, and ofc, to do the things that we love doing. the future is certainly uncertain, but i believe that when we're together, we can surpass those obstacles. i love u and appreciate u more than u know. u're the most genuine person i've known. and i love u for being u. <br><br>
+            and love, do not get pressured. someday, you'll be where you want to be. take things slowly, and i know that with your potential, you can soar high and reach your dreams. just know that when things get heavy, im here. you're not alone, you have me.<br><br>
+            happy 3rd monthsary mahal, i love u palagi. kakayanin! (at happy pride na rin HWSHHAHAHA MGA BADING!!) 🤍 <br><br>
+            namu, ure baby panda
+          </div>
+        </div>
+      </div>
+
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="in love peanut.jpg" alt="">
+          <div><div class="username">Peanut</div><div class="badge">4th Monthsary • Jul 13, 2025</div></div>
+        </div>
+        <div class="post-media letter">
+          <div class="letter-card">
+            <strong>Peanut → Namu</strong><br><br>
+            Happy 4th Mot-Mot, my love, my baby, my everything.<br><br>
+            Ang bilis talaga ng panahon. Another month has passed, and here we are, celebrating our 4th month together, another beautiful chapter in our love story. And I pray this won't be the last.<br><br>
+            Honestly, hindi ko talaga in expect na aabot tayo dito. Pero siguro nga, miracles do happen at ikaw 'yung biggest miracle na dumating sa magulo kong mundo. Ang galing mo kasi, napapasaya mo ako sa mga simpleng bagay na ginagawa mo, mga bagay na hindi ko rin naman inasahan. Hindi ko rin inakala na mamahalin kita nang ganito ka lalim.<br><br>
+            Pasensya ka na kung puro letters at websites lagi regalo ko sa'yo. Nakalimutan ko pa nga yung name ng website nato kaya kinailangan kong mag backread. 😛 Pero alam mo sobrang saya balikan ng mga panahon na nag uumpisa pa lang tayo. Naiiyak man ako minsan habang binabalikan yon puro saya pa rin ang nararamdaman ko.<br><br>
+            Naalala ko kung gaano ako kakulit sayo kapag nami-miss kita. Tadtad ng GIFs ang chats ko, o kaya sobrang lambing ko minsan gusto ko pa makipag ano--- alam mo na 'yon. Hahahaha 😄<br><br>
+            Di ko din alam kung naaalala mo pa, pero nag call tayo noon ng halos 9 hours. Di ko na nga rin tanda kung ano pinag usapan natin, pero sobrang saya lang.<br><br>
+            Nakaka miss din yung pagkatapos natin mag call sa Discord lilipat tayo sa Messenger para mag sleep call. Mga simpleng bagay na sobrang sarap balikan mga memories na nagpapangiti pa rin sakin hanggang ngayon.<br><br>
+            Aaminin ko, there were times na nadadoubt ko yung sarili ko. Pero ikaw yung naging lakas ko.<br><br>
+            Gustuhin ko man ulitin lahat ng ginagawa natin noon, minsan hindi na puwede kasi busy ka at busy na rin ako. Tama ka, we're getting older, we have priorities and kailangan natin harapin ang reality. Nakakapanghinayang lang kasi parang hindi na natin nagagawa kahit yung simpleng tawag lang.<br><br>
+            Hindi rin naging madali para satin ang mga nag daan na araw at buwan kasi dumaan tayo sa away at misunderstandings. Pero kahit ganun, hindi tayo bumitaw. Kaya sana wag ka ring susuko sakin gaya ng pangako ko sayo na hihintayin kita at iintindihin ko ikaw at busy daysmo at hinding hindi kita susukuan.<br><br>
+            Mahal na mahal kita, Drei higit pa sa inaakala mo. Ganito lang ako pero lahat ng nararamdaman ko para sayo ay totoo. <br><br>
+            I'm so, so proud of you, mahal congratulations sa pagiging Magna Cum Laude. Sobrang ganda ng achievement na yan, at patunay na malayo na ang narating mo. And I know you're only just getting started.<br><br>
+            Bago ko tapusin tong letter, may naisip lang ako bigla, Kung dumating man yung panahon na hindi ikaw ang makakasama ko habang buha, ang hiling ko lang sana matagpuan mo pa rin yung magpapasaya sayo. Pero syempre ako na yon Ayaw na kitang pakawalan eh.<br><br>
+            I love you, I miss you, mahal na mahal na mahal na mahal kita. Mwa mwa. 💗
+          </div>
+        </div>
+      </div>
+
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="in love.jpg" alt="">
+          <div><div class="username">Namu</div><div class="badge">4th Monthsary • Jul 13, 2025</div></div>
+        </div>
+        <div class="post-media letter">
+          <div class="letter-card">
+            <strong>Namu → Peanut</strong><br><br>
+            Happy 4th Monthsary Babe!<br><br>
+            I know this past few months have been a challenge, especially for you. And I really appreciate the fact that you're still choosing to stay and love me. <br><br>
+            Life really gets serious and hits you in the face sometimes, and that makes me somewhat assertive and emotional at the same time — which reflects my attitude sometimes whenever we talk. And I'm really sorry and I have no excuse to those things I've done.<br><br>
+            But just know that deeply in my heart, I love you and I will always choose to stay because this relationship is valuable to me more than anything else.<br><br>
+            I hope soon, we reach our dreams on life and hopefully, we get to meet 🥹👋🏻 I really wanna see you haha. I love you so much babe, and please, take care of yourself for me. Mwaaa, love you baby bear 🐻🤍<br><br>
+            HAPPY 4TH MONTHSARY SATINNNNNNN 😘♥️<br><br>
+            Sincerely,<br>
+            Drei, your baby panda 🐼
+          </div>
+        </div>
+      </div>
+      
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="in love.jpg" alt="">
+          <div><div class="username">Namu</div><div class="badge">5th Monthsary • Aug 13, 2025</div></div>
+        </div>
+        <div class="post-media letter">
+          <div class="letter-card">
+            <strong>Namu → Peanut</strong><br><br>
+            Hello Babe, Peanut, Baby, Baby Bear!<br><br>
+            HAPPY 5TH MONTHSARY SATINNNN. OMG, I can't believe na umabot tayo ng 5 months. PARANG KELAN LANG ULIT T^T I hope you feel and know how much I love you. The past month definitely tested us, we were at our lowest, but still, we're here together. Proud na proud ako sa'tin, na 'di natin piniling sumuko sa isa't-isa.<br><br>
+            Thank you for everything you've done for me, I really appreciate your efforts. Mahal na mahal kita sobra pa sa inaakala mo. Tomorrow, ga-graduate na ang oat na ito which means na same na tayong alumniiii! CHEERS TO THATTT. I'm so happy to be sharing this important milestone with you, and I'm very happy that you're in it.<br><br>
+            Stay strong sa atin babe, more memories are underway for us. I love you so much and hoping you're always in good health - physically and mentally. Also hoping for our relationship to stay strong and committed. HAPPY MONTHSARY BABEEE YAYYY 😍 🤍
+          </div>
+        </div>
+      </div>
+      
+      <!-- 5th Monthsary Gift -->
+      <div class="post">
+        <div class="post-header">
+          <img class="pfp" src="in love peanut.jpg" alt="">
+          <div>
+            <div class="username">Peanut</div>
+            <div class="badge">5th Monthsary • Aug 13, 2025</div>
+          </div>
+        </div>
+        
+        <div class="monthsary-gift">
+          <div class="gift-header">
+            <h2>The Reasons Why I Love You</h2>
+            <p>A special gift for our 5th Monthsary, my love</p>
+          </div>
+          
+          <div class="reason-grid">
+            <!-- Reason 1 -->
+            <div class="reason-card">
+              <img src="namu and peanut 3.jpg" alt="Your Smile" class="reason-image">
+              <div class="reason-content">
+                <div class="reason-title">Reason #1 </div>
+                <div class="reason-text">Because you are the quiet magic in my every day—the reason mornings greet me with hope, and nights feel like gentle lullabies.</div>
+              </div>
+            </div>
+            
+            <!-- Reason 2 -->
+            <div class="reason-card">
+              <img src="tampuhan.jpg" alt="Your Kindness" class="reason-image">
+              <div class="reason-content">
+                <div class="reason-title">Reason #2 </div>
+                <div class="reason-text">because even when we have our tampuhan moments, even when it's not easy, we choose to stay, to fight for us, and to make this love work.</div>
+              </div>
+            </div>
+            
+            <!-- Reason 3 -->
+            <div class="reason-card">
+              <img src="namu and peanut 4.jpg" alt="Your Mind" class="reason-image">
+              <div class="reason-content">
+                <div class="reason-title">Reason #3 </div>
+                <div class="reason-text">Because you see me, not just the polished parts, but the raw, fragile, stubborn edges… and you still hold me like I'm something worth keeping.</div>
+              </div>
+            </div>
+            
+            <!-- Reason 4 -->
+            <div class="reason-card">
+              <img src="namu and peanut 2.jpg" alt="Your Support" class="reason-image">
+              <div class="reason-content">
+                <div class="reason-title">Reason #4 </div>
+                <div class="reason-text">Because you are both my calm and my chaos, my safest place and my greatest adventure—and in every lifetime, I would still find you, still love you, still call you mine.</div>
+              </div>
+            </div>
+            
+            <!-- Reason 5 -->
+            <div class="reason-card">
+              <img src="namu and peanut1.jpg" alt="Your Humor" class="reason-image">
+              <div class="reason-content">
+                <div class="reason-title">Reason #5 </div>
+                <div class="reason-text">Because you are you… and I love you for that. No conditions, no doubts, just love. Always.  YOU SHOWED ME THE TRUE MEANING OF LOVE</div>
+              </div>
+            </div>
+            
+            <!-- Reason 6 -->
+            <div class="reason-card">
+              <img src="namu and peanut.jpg" alt="Your Ambition" class="reason-image">
+              <div class="reason-content">
+                <div class="reason-title">Reason #6 </div>
+                <div class="reason-text">I admire your drive and dedication to your goals. Watching you work hard to achieve your dreams motivates me to be better.</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="love-letter">
+            <h3>My Dearest Namu,</h3>
+            <p>Happy 5th Monthsary, my love! It's hard to believe how quickly time has flown since we first started this beautiful journey together. These past five months have been filled with so much love, laughter, and growth, and I cherish every moment we've shared.</p>
+            
+            <p>You've brought so much joy and meaning into my life. Your smile brightens my darkest days, your kindness touches my soul, and your intelligence constantly amazes me. I love how we can talk for hours about anything and everything, and how comfortable I feel just being myself with you.</p>
+            
+            <p>Through all the ups and downs, you've been my constant source of strength and support. Your unwavering belief in me gives me courage to face any challenge. Your sense of humor always lifts my spirits, and your ambition inspires me to be a better person.</p>
+            
+            <p>I'm so grateful for your patience, your understanding, and the way you love me completely. You've shown me what true partnership means, and I feel so lucky to have you by my side.</p>
+            
+            <p>As we celebrate this milestone, I look forward to creating many more beautiful memories together. Thank you for being you, for loving me, and for making these past five months the happiest of my life.</p>
+            
+            <p>Here's to us, to our love, and to all the wonderful months and years ahead!
+            </p>
+            <p> I take your hand and pull you closer.
+              Happy 5th monthsary, Babe. And congratulations for everything you are and everything you’ve achieved. I’m proud of you. I love you. Forever.</p>
+            
+            <div class="signature">
+              With all my love,<br>
+              Peanut ❤️
+            </div>
+          </div>
+        </div>
+        <div class="actions"><span class="heart">❤️</span><span class="comment-btn">💬</span></div>
+        <div class="likes">0 likes</div>
+      </div>
+    </section>
+
+    <!-- COMBINED PROFILES SECTION -->
+    <section id="profiles" class="hide">
+      <div class="profile-tabs">
+        <button class="profile-tab active" data-profile="peanut">Peanut</button>
+        <button class="profile-tab" data-profile="namu">Namu</button>
+      </div>
+    
+      <!-- Peanut's Profile Content -->
+      <div id="peanut-profile" class="profile-content">
+        <div class="profile">
+          <img class="pfp-big" src="happy peanut.jpg" alt="Peanut smiling">
+          <div>
+            <h2 style="margin:0 0 6px">Peanut</h2>
+            <div class="bio">Namu's Baby Bear</div>
+            <div class="highlights">
+              <div class="pill">Birthday: Jul 16, 2002</div>
+              <div class="pill">Graduation: Jun 7, 2025</div>
+              <div class="pill">Together Since: Mar 13, 2025</div>
+              <div class="pill">BS in Information Technology</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="grid">
+          <div class="tile" data-type="img" data-img="seoul.png" data-caption="Our 3rd Monthsary celebration - April 13, 2025">
+            <img src="seoul.png" alt="Namu and Peanut at 3 months">
+            <div class="overlay">3rd Monthsary Memories</div>
+          </div>
+          
+          <div class="tile" data-type="img" data-img="namu and peanut 4.jpg" data-caption="Our 4th Monthsary celebration - April 13, 2025">
+            <img src="namu and peanut 4.jpg" alt="Namu and Peanut at 4 months">
+            <div class="overlay">4th Monthsary Memories</div>
+          </div>
+          
+          <div class="tile" data-type="img" data-img="grad peanut.jpg" data-caption="Graduation day - June 7, 2025">
+            <img src="grad peanut.jpg" alt="Graduation day">
+            <div class="overlay">Graduation Memories</div>
+          </div>
+          
+          <div class="tile" data-type="img" data-img="peanut birthday.jpg" data-caption="Birthday celebration - July 16, 2025">
+            <img src="peanut birthday.jpg" alt="Birthday celebration">
+            <div class="overlay">Birthday Memories</div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Namu's Profile Content -->
+      <div id="namu-profile" class="profile-content hide">
+        <div class="profile">
+          <img class="pfp-big" src="happy.jpg" alt="Namu smiling">
+          <div>
+            <h2 style="margin:0 0 6px">Namu</h2>
+            <div class="bio">Peanut's Baby Panda</div>
+            <div class="highlights">
+              <div class="pill">Birthday: Apr 22, 2003</div>
+              <div class="pill">Graduation: Aug 14, 2025</div>
+              <div class="pill">Together Since: Mar 13, 2025</div>
+              <div class="pill">BS in Psychology</div>
+            </div>
+          </div>
+        </div>
+    
+        <div class="grid">
+          <div class="tile" data-type="img" data-img="date part 2.png" data-caption="Our 3rd Monthsary celebration - June 13, 2025">
+            <img src="date part 2.png" alt="Namu and Peanut at 3 months">
+            <div class="overlay">3rd Monthsary Memories</div>
+          </div>
+          
+          <div class="tile" data-type="img" data-img="namu and peanut 4.jpg" data-caption="Our 4th Monthsary celebration - July 13, 2025">
+            <img src="namu and peanut 4.jpg" alt="Namu and Peanut at 4 months">
+            <div class="overlay">4th Monthsary Memories</div>
+          </div>
+          
+          <div class="tile" data-type="img" data-img="grad namu.jpg"data-caption="Graduation day - August 14, 2025">
+            <img src="grad namu.jpg" alt="Graduation day">
+            <div class="overlay">Graduation Memories</div>
+          </div>
+          
+          <div class="tile" data-type="img" data-img="birthday.jpg" data-caption="Birthday celebration - April 22, 2025">
+            <img src="birthday.jpg" alt="Birthday celebration">
+            <div class="overlay">Birthday Memories</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-inner">
+    <div class="modal-head">
+      <div id="modalTitle" style="font-weight:700"></div>
+      <button class="close" id="closeModal">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-cap" id="modalCaption"></div>
+  </div>
+</div>
+
+<script>
+// Login functionality
+const loginBtn = document.getElementById('loginButton');
+const loginContainer = document.getElementById('loginContainer');
+const appContainer = document.getElementById('appContainer');
+const userInput = document.getElementById('username');
+const passInput = document.getElementById('password');
+
+loginBtn.addEventListener('click', () => {
+  const u = userInput.value.trim();
+  const p = passInput.value.trim();
+  if(u === 'Namu&Peanut' && p === 'March132025') {
+    loginContainer.style.display = 'none';
+    appContainer.style.display = 'block';
+    window.scrollTo(0,0);
+    
+    // Save login state
+    localStorage.setItem('isLoggedIn', 'true');
+  } else {
+    alert('Incorrect username or password');
+  }
+});
+
+// Check if already logged in
+if(localStorage.getItem('isLoggedIn') === 'true') {
+  loginContainer.style.display = 'none';
+  appContainer.style.display = 'block';
+}
+
+// Theme toggle
+document.getElementById('modeLogin').addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+});
+
+document.getElementById('mode').addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+});
+
+// Apply saved dark mode preference
+if(localStorage.getItem('darkMode') === 'true') {
+  document.body.classList.add('dark');
+}
+
+// Tab navigation
+const tabs = [...document.querySelectorAll('.tab')];
+const sections = ['home','roblox','grad','music','birthdays','monthsary','profiles'].map(id => document.getElementById(id));
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tabs.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const target = btn.dataset.target;
+    sections.forEach(sec => sec.id === target ? sec.classList.remove('hide') : sec.classList.add('hide'));
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+// Like functionality
+function likeHandler(e){
+  const post = e.target.closest('.post');
+  if(!post) return;
+  const likes = post.querySelector('.likes');
+  const current = parseInt(likes.textContent) || 0;
+  likes.textContent = (current + 1) + ' likes';
+}
+
+// Comment functionality
+function commentHandler(e){
+  const post = e.target.closest('.post');
+  if(!post) return;
+  alert('Add comment feature: type-to-post can be added next. For now, tap OK to continue. 💬');
+}
+
+document.addEventListener('click', (e) => {
+  if(e.target.classList.contains('heart')) likeHandler(e);
+  if(e.target.classList.contains('comment-btn')) commentHandler(e);
+});
+
+// Modal functionality
+const modal = document.getElementById('modal');
+const modalBody = document.getElementById('modalBody');
+const modalCap = document.getElementById('modalCaption');
+const modalTitle = document.getElementById('modalTitle');
+
+document.getElementById('closeModal').addEventListener('click', () => modal.style.display = 'none');
+modal.addEventListener('click', (e) => {
+  if(e.target === modal) modal.style.display = 'none';
+});
+
+function openImageModal(src, title, cap) {
+  modalTitle.textContent = title || '';
+  modalBody.innerHTML = '<img src="' + src + '" alt="full">';
+  modalCap.textContent = cap || '';
+  modal.style.display = 'flex';
+}
+
+function openLetterModal(title, body, cap) {
+  modalTitle.textContent = title || '';
+  modalBody.innerHTML = '<div class="letter-card" style="margin:14px">' + body.replaceAll('\n','<br>') + '</div>';
+  modalCap.textContent = cap || '';
+  modal.style.display = 'flex';
+}
+
+// Tile click handling
+document.querySelectorAll('.tile').forEach(t => {
+  t.addEventListener('click', () => {
+    const type = t.dataset.type;
+    if(type === 'img') {
+      openImageModal(t.dataset.img || t.querySelector('img').src, '', t.dataset.caption || '');
+    } else if (type === 'letter') {
+      openLetterModal(t.dataset.letterTitle || '', t.dataset.letterBody || '', t.dataset.caption || '');
+    } else if (type === 'monthsary5') {
+      // Switch to Monthsary section and scroll to the gift
+      tabs.forEach(b => b.classList.remove('active'));
+      document.querySelector('.tab[data-target="monthsary"]').classList.add('active');
+      
+      sections.forEach(sec => sec.classList.add('hide'));
+      document.getElementById('monthsary').classList.remove('hide');
+      
+      // Scroll to the gift
+      setTimeout(() => {
+        document.querySelector('.monthsary-gift').scrollIntoView({behavior: 'smooth'});
+      }, 300);
+    }
+  });
+});
+
+// Psychology section
+const compliments = [
+  {text: "The Halo Effect makes me see everything about you as perfect, because your beautiful soul shines through in everything you do.", explanation: "The Halo Effect is a cognitive bias where our overall impression of a person influences how we feel about their character."},
+  {text: "Our attachment styles complement each other perfectly, creating a secure base for our relationship to flourish.", explanation: "Attachment Theory explains how early relationships shape our patterns in adult relationships."},
+  {text: "We experience the Mere Exposure Effect - the more time we spend together, the deeper our love grows.", explanation: "The Mere Exposure Effect is our tendency to develop preferences for things simply because they're familiar."},
+  {text: "Our relationship demonstrates the Michelangelo Phenomenon, where we help each other become our best selves.", explanation: "The Michelangelo Phenomenon describes how partners shape each other to become closer to their ideal selves."}
+];
+
+const affirmations = [
+  {text: "Our love creates a safe haven where we can both be vulnerable and authentic.", principle: "Based on Attachment Theory"},
+  {text: "Every challenge we overcome together strengthens our relationship resilience.", principle: "Rooted in Relationship Resilience research"},
+  {text: "We practice active constructive responding, which deepens our emotional connection.", principle: "From Positive Psychology research"}
+];
+
+// Initialize psychology section
+document.getElementById('complimentBtn').addEventListener('click', () => {
+  const c = compliments[Math.floor(Math.random() * compliments.length)];
+  document.getElementById('compliment-text').textContent = c.text;
+  document.getElementById('bias-explanation').textContent = c.explanation;
+});
+
+document.getElementById('affirmationBtn').addEventListener('click', () => {
+  const a = affirmations[Math.floor(Math.random() * affirmations.length)];
+  document.getElementById('affirmation-text').textContent = a.text;
+  document.getElementById('psychology-principle').textContent = a.principle;
+});
+
+// Profile tab switching
+document.querySelectorAll('.profile-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    // Remove active class from all tabs
+    document.querySelectorAll('.profile-tab').forEach(t => {
+      t.classList.remove('active');
+    });
+    
+    // Add active to clicked tab
+    tab.classList.add('active');
+    
+    // Hide all profile contents
+    document.querySelectorAll('.profile-content').forEach(content => {
+      content.classList.add('hide');
+    });
+    
+    // Show selected profile
+    const profileToShow = tab.dataset.profile + '-profile';
+    document.getElementById(profileToShow).classList.remove('hide');
+  });
+});
+
+// Reset to Peanut's profile when "Our Profiles" tab is clicked
+document.querySelector('.tab[data-target="profiles"]').addEventListener('click', () => {
+  document.querySelector('.profile-tab[data-profile="peanut"]').click();
+});
+
+// Color customization
+function updateThemeColor(hue) {
+  document.documentElement.style.setProperty('--theme-hue', hue);
+  localStorage.setItem('themeHue', hue);
+  
+  // Update color pickers
+  const rgbColor = `hsl(${hue}, 85%, 75%)`;
+  document.getElementById('themeColor').value = rgbToHex(rgbColor);
+  document.getElementById('themeColorApp').value = rgbToHex(rgbColor);
+}
+
+// Helper to convert HSL to hex
+function hslToHex(h, s, l) {
+  l /= 100;
+  const a = s * Math.min(l, 1 - l) / 100;
+  const f = n => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function rgbToHex(rgb) {
+  // Create a dummy element to use the browser's color conversion
+  const dummy = document.createElement('div');
+  dummy.style.color = rgb;
+  document.body.appendChild(dummy);
+  const computed = window.getComputedStyle(dummy).color;
+  document.body.removeChild(dummy);
+  
+  // Convert rgb string to hex
+  const [r, g, b] = computed.match(/\d+/g);
+  return '#' + [r, g, b].map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
+}
+
+// Color picker event listeners
+document.getElementById('themeColor').addEventListener('input', (e) => {
+  const hex = e.target.value;
+  const temp = document.createElement('div');
+  temp.style.color = hex;
+  document.body.appendChild(temp);
+  const rgb = window.getComputedStyle(temp).color;
+  document.body.removeChild(temp);
+  
+  // Extract HSL values
+  const match = rgb.match(/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/);
+  if (match) {
+    const hue = match[1];
+    updateThemeColor(hue);
+  }
+});
+
+document.getElementById('themeColorApp').addEventListener('input', (e) => {
+  const hex = e.target.value;
+  const temp = document.createElement('div');
+  temp.style.color = hex;
+  document.body.appendChild(temp);
+  const rgb = window.getComputedStyle(temp).color;
+  document.body.removeChild(temp);
+  
+  // Extract HSL values
+  const match = rgb.match(/hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/);
+  if (match) {
+    const hue = match[1];
+    updateThemeColor(hue);
+  }
+});
+
+// Color preset functionality
+document.querySelectorAll('.color-preset').forEach(preset => {
+  preset.addEventListener('click', () => {
+    const hue = preset.dataset.hue;
+    updateThemeColor(hue);
+  });
+});
+
+// Apply saved theme color
+if(localStorage.getItem('themeHue')) {
+  updateThemeColor(localStorage.getItem('themeHue'));
+} else {
+  // Default purple
+  updateThemeColor(250);
+}
+
+// Handle clicks on reason cards
+document.addEventListener('click', function(e) {
+  // Handle reason card clicks
+  const reasonCard = e.target.closest('.reason-card');
+  if(reasonCard) {
+    const img = reasonCard.querySelector('.reason-image');
+    if(img) {
+      const title = reasonCard.querySelector('.reason-title')?.textContent || '';
+      const text = reasonCard.querySelector('.reason-text')?.textContent || '';
+      const caption = `${title} - ${text}`;
+      
+      openImageModal(img.src, 'Reason I Love You', caption);
+    }
+  }
+});
+</script>
+</body>
+</html>
